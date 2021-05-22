@@ -5,7 +5,7 @@ export interface PeriodicElement {
   centerName: string;
   address: string;
   doses: number;
-  dose1?: number;
+  dose1: number;
   pincode: string;
 }
 const ELEMENT_DATA1: PeriodicElement[] = [];
@@ -65,6 +65,52 @@ export class TableBasicExample implements OnInit {
 
   private fetchVaccinationData() {
     console.log('Fetch call');
+    let centerData: PeriodicElement[] = [];
+    let self = this;
+    self.service
+      .getAvailableSlot(this.districtId, this.date)
+      .subscribe((data: any) => {
+        data.centers.forEach((center: any, index: any) => {
+          let availableDosesSession: any[] = center.sessions.filter(
+            (session: any) =>
+              session.available_capacity > 0 && session.min_age_limit < 45
+          );
+
+          if (availableDosesSession.length > 0) {
+            centerData.push({
+              centerName: center.name,
+              address: center.address,
+              doses: availableDosesSession.reduce(
+                (sum, sess) => sum + sess.available_capacity,
+                0
+              ),
+              dose1: availableDosesSession.reduce(
+                (sum, sess) => sum + sess.available_capacity_dose1,
+                0
+              ),
+              pincode: center.pincode
+            });
+          }
+        });
+        this.dataSource = centerData.sort(
+          (a: PeriodicElement, b: PeriodicElement) => {
+            // Use toUpperCase() to ignore character casing
+            const bandA = +a.dose1;
+            const bandB = +b.dose1;
+
+            let comparison = 0;
+            if (bandA < bandB) {
+              comparison = 1;
+            } else if (bandA > bandB) {
+              comparison = -1;
+            }
+            return comparison;
+          }
+        );
+      });
+  }
+  private fetchVaccinationDatabackup() {
+    console.log('Fetch call backup');
     let centerData: PeriodicElement[] = [];
     let self = this;
     self.service

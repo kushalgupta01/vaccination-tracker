@@ -37,6 +37,36 @@ export class VaccinationTrackerService {
               ],
               available_capacity_dose1: 150,
               available_capacity_dose2: 0
+            },
+            {
+              session_id: 'b291b8e1-9ef5-485e-8bc7-dc3b139e1418',
+              date: '22-05-2021',
+              available_capacity: 244,
+              min_age_limit: 18,
+              vaccine: 'COVISHIELD',
+              slots: [
+                '09:00AM-11:00AM',
+                '11:00AM-01:00PM',
+                '01:00PM-03:00PM',
+                '03:00PM-05:00PM'
+              ],
+              available_capacity_dose1: 150,
+              available_capacity_dose2: 0
+            },
+            {
+              session_id: 'b291b8e1-9ef5-485e-8bc7-dc3b139e1418',
+              date: '22-05-2021',
+              available_capacity: 67,
+              min_age_limit: 18,
+              vaccine: 'COVISHIELD',
+              slots: [
+                '09:00AM-11:00AM',
+                '11:00AM-01:00PM',
+                '01:00PM-03:00PM',
+                '03:00PM-05:00PM'
+              ],
+              available_capacity_dose1: 10,
+              available_capacity_dose2: 0
             }
           ]
         },
