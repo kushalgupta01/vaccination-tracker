@@ -68,7 +68,7 @@ export class TableBasicExample implements OnInit {
     let centerData: PeriodicElement[] = [];
     let self = this;
     self.service
-      .getAvailableSlot1(this.districtId, this.date)
+      .getAvailableSlot(this.districtId, this.date)
       .subscribe((data: any) => {
         data.centers.forEach((center: any, index: any) => {
           let availableDosesSession: any[] = center.sessions.filter(
