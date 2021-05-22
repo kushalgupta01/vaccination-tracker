@@ -62,13 +62,13 @@ export class TableBasicExample implements OnInit {
       });
     });
   }
-
+  counter: number = 0;
   private fetchVaccinationData() {
     console.log('Fetch call');
     let centerData: PeriodicElement[] = [];
     let self = this;
     self.service
-      .getAvailableSlot(this.districtId, this.date)
+      .getAvailableSlot1(this.districtId, this.date)
       .subscribe((data: any) => {
         data.centers.forEach((center: any, index: any) => {
           let availableDosesSession: any[] = center.sessions.filter(
@@ -77,6 +77,12 @@ export class TableBasicExample implements OnInit {
           );
 
           if (availableDosesSession.length > 0) {
+            let dose1 = availableDosesSession.reduce(
+              (sum, sess) => sum + sess.available_capacity_dose1,
+              0
+            );
+
+            if (dose1 > 0) this.counter++;
             centerData.push({
               centerName: center.name,
               address: center.address,
@@ -84,10 +90,7 @@ export class TableBasicExample implements OnInit {
                 (sum, sess) => sum + sess.available_capacity,
                 0
               ),
-              dose1: availableDosesSession.reduce(
-                (sum, sess) => sum + sess.available_capacity_dose1,
-                0
-              ),
+              dose1: dose1,
               pincode: center.pincode
             });
           }
