@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 export class VaccinationTrackerService {
   constructor(private http: HttpClient) {}
 
-  public getAvailableSlot1() {
+  public getAvailableSlot1(...arg1: any[]) {
     return of({
       centers: [
         {
@@ -35,7 +35,7 @@ export class VaccinationTrackerService {
                 '01:00PM-03:00PM',
                 '03:00PM-05:00PM'
               ],
-              available_capacity_dose1: 0,
+              available_capacity_dose1: 150,
               available_capacity_dose2: 0
             }
           ]
@@ -57,7 +57,7 @@ export class VaccinationTrackerService {
             {
               session_id: '3d39dfb1-fcc9-49de-bea1-cca36eba92c1',
               date: '22-05-2021',
-              available_capacity: 0,
+              available_capacity: 133,
               min_age_limit: 18,
               vaccine: 'COVISHIELD',
               slots: [
@@ -66,8 +66,8 @@ export class VaccinationTrackerService {
                 '01:00PM-03:00PM',
                 '03:00PM-06:00PM'
               ],
-              available_capacity_dose1: 0,
-              available_capacity_dose2: 0
+              available_capacity_dose1: 100,
+              available_capacity_dose2: 33
             }
           ]
         },
@@ -97,7 +97,7 @@ export class VaccinationTrackerService {
                 '01:00PM-03:00PM',
                 '03:00PM-05:00PM'
               ],
-              available_capacity_dose1: 0,
+              available_capacity_dose1: 100,
               available_capacity_dose2: 0
             }
           ]
@@ -159,7 +159,7 @@ export class VaccinationTrackerService {
                 '01:00PM-03:00PM',
                 '03:00PM-05:00PM'
               ],
-              available_capacity_dose1: 0,
+              available_capacity_dose1: 2,
               available_capacity_dose2: 0
             }
           ]
@@ -222,7 +222,7 @@ export class VaccinationTrackerService {
                 '01:00PM-03:00PM',
                 '03:00PM-06:00PM'
               ],
-              available_capacity_dose1: 0,
+              available_capacity_dose1: 29,
               available_capacity_dose2: 0
             }
           ]
@@ -377,7 +377,7 @@ export class VaccinationTrackerService {
                 '01:00PM-03:00PM',
                 '03:00PM-06:00PM'
               ],
-              available_capacity_dose1: 0,
+              available_capacity_dose1: 130,
               available_capacity_dose2: 0
             }
           ]
@@ -387,9 +387,40 @@ export class VaccinationTrackerService {
     //return this.http.get(  'https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=770&date=22-05-2021' );
   }
 
-  public getAvailableSlot() {
+  public getAvailableSlot(districId: number, date: Date) {
+    let current_datetime =
+      date.getDate() + '-0' + (date.getMonth() + 1) + '-' + date.getFullYear();
+    console.log(current_datetime);
     return this.http.get(
-      'https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=770&date=22-05-2021'
+      `https://cdn-api.co-vin.in/api/v2/appointment/sessions/calendarByDistrict?district_id=${districId}&date=${current_datetime}`
     );
+  }
+
+  public getDistricts() {
+    return of({
+      districts: [
+        {
+          district_id: 154,
+          district_name: 'Ahmedabad'
+        },
+        {
+          district_id: 770,
+          district_name: 'Ahmedabad Corporation'
+        },
+
+        {
+          district_id: 165,
+          district_name: 'Surat'
+        },
+        {
+          district_id: 776,
+          district_name: 'Surat Corporation'
+        },
+        {
+          district_id: 363,
+          district_name: 'Pune'
+        }
+      ]
+    });
   }
 }

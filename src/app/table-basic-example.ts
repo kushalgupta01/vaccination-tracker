@@ -25,6 +25,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
     pincode: '382115'
   }
 ];
+interface District {
+  value: string;
+  viewValue: string;
+}
 
 /**
  * @title Basic use of `<table mat-table>`
@@ -37,6 +41,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
 export class TableBasicExample implements OnInit {
   constructor(private service: VaccinationTrackerService) {}
 
+  districts: District[] = [];
+
   displayedColumns: string[] = [
     'doses',
     'centerName',
@@ -45,49 +51,66 @@ export class TableBasicExample implements OnInit {
     'pincode'
   ];
   dataSource = ELEMENT_DATA1;
-  ngOnInit(): void {}
+  date: any = new Date();
+  ngOnInit(): void {
+    this.service.getDistricts().subscribe((data: any) => {
+      data.districts.forEach((district: any) => {
+        this.districts.push({
+          viewValue: district.district_name,
+          value: district.district_id
+        });
+      });
+    });
+  }
 
   private fetchVaccinationData() {
     console.log('Fetch call');
     let centerData: PeriodicElement[] = [];
     let self = this;
-    self.service.getAvailableSlot().subscribe((data: any) => {
-      data.centers
-        //filtering non zero doses
-        .filter((center: any) => center.sessions[0].available_capacity > 0)
+    self.service
+      .getAvailableSlot(this.districtId, this.date)
+      .subscribe((data: any) => {
+        data.centers
+          //filtering non zero doses
+          .filter(
+            (center: any) =>
+              center.sessions[0].available_capacity > 0 &&
+              center.sessions[0].min_age_limit < 45
+          )
 
-        //pushing into new bucket
-        .forEach((center: any, index: any) => {
-          centerData.push({
-            centerName: center.name,
-            address: center.address,
-            doses: center.sessions[0].available_capacity,
-            dose1: center.sessions[0].available_capacity_dose1,
-            pincode: center.pincode
+          //pushing into new bucket
+          .forEach((center: any, index: any) => {
+            centerData.push({
+              centerName: center.name,
+              address: center.address,
+              doses: center.sessions[0].available_capacity,
+              dose1: center.sessions[0].available_capacity_dose1,
+              pincode: center.pincode
+            });
           });
-        });
 
-      //sorting
-      this.dataSource = centerData.sort(
-        (a: PeriodicElement, b: PeriodicElement) => {
-          // Use toUpperCase() to ignore character casing
-          const bandA = +a.doses;
-          const bandB = +b.doses;
+        //sorting
+        this.dataSource = centerData.sort(
+          (a: PeriodicElement, b: PeriodicElement) => {
+            // Use toUpperCase() to ignore character casing
+            const bandA = +a.doses;
+            const bandB = +b.doses;
 
-          let comparison = 0;
-          if (bandA < bandB) {
-            comparison = 1;
-          } else if (bandA > bandB) {
-            comparison = -1;
+            let comparison = 0;
+            if (bandA < bandB) {
+              comparison = 1;
+            } else if (bandA > bandB) {
+              comparison = -1;
+            }
+            return comparison;
           }
-          return comparison;
-        }
-      );
-      // data.centers.filter((center: any) => console.log(center));
-    });
+        );
+        // data.centers.filter((center: any) => console.log(center));
+      });
   }
 
   startId: number;
+  districtId: number = 770;
   startTracker() {
     console.log('Tracker Started');
     let self = this;
@@ -96,8 +119,17 @@ export class TableBasicExample implements OnInit {
 
   stopTracker() {
     console.log('Tracker Stoped');
-    clearInterval(this.startId);
+
+    if (this.startId) clearInterval(this.startId);
     this.dataSource = ELEMENT_DATA1;
+  }
+  districtSelection(abc: any) {
+    this.districtId = abc;
+  }
+
+  refresh() {
+    this.stopTracker();
+    this.startTracker();
   }
 }
 

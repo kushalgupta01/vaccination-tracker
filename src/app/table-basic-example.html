@@ -1,6 +1,19 @@
 <h1>Vaccination tracker</h1>
 <button mat-stroked-button color="primary" (click)="startTracker()">Start</button>
 <button mat-stroked-button color="warn" (click)="stopTracker()">Stop</button>
+<button mat-stroked-button color="warn" (click)="refresh()">Refresh</button>
+<mat-label>Choose a date</mat-label>
+<input matInput [(ngModel)]="date" [matDatepicker]="picker">
+<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+<mat-datepicker #picker></mat-datepicker>
+<div>
+  <mat-label>Select District</mat-label>
+  <mat-select (selectionChange)="districtSelection($event.value)">
+    <mat-option *ngFor="let district of districts" [value]="district.value">
+      {{district.viewValue}}
+    </mat-option>
+  </mat-select>
+</div>
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
   <!--- Note that these columns can be defined in any order.
         The actual rendered columns are set as a property on the row definition" -->

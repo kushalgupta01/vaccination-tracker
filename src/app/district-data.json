@@ -1,0 +1,24 @@
+{"districts": [
+    {
+      "district_id": 154,
+      "district_name": "Ahmedabad"
+    },
+    {
+      "district_id": 770,
+      "district_name": "Ahmedabad Corporation"
+    },
+  
+    {
+      "district_id": 165,
+      "district_name": "Surat"
+    },
+    {
+      "district_id": 776,
+      "district_name": "Surat Corporation"
+    },
+    {
+      "district_id": 363,
+      "district_name": "Pune"
+    }
+  ]
+  }
